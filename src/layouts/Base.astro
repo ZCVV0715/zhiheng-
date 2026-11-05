@@ -4,24 +4,24 @@ import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 
 const {
-  title = '致恒的跨境手记',
-  description = '关于跨境电商、独立站建站与出海服务的一手观察。偶尔写技术，偶尔写生意。',
+  title = '致恒跨境',
+  description = '跨境电商服务与实战笔记。从店铺注册、视频认证到二审申诉，把踩过的坑写成可复用的流程。',
 } = Astro.props;
 
-const siteName = '致恒的跨境手记';
+const siteName = '致恒跨境';
 const pageTitle = title.includes(siteName) ? title : `${title} — ${siteName}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <meta name="author" content="致恒" />
-    <meta name="theme-color" content="#fbfaf8" />
+    <meta name="theme-color" content="#0b0e11" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml" />
@@ -36,10 +36,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <script is:inline>
       (function () {
         try {
-          var t = localStorage.getItem('theme');
-          if (!t) {
-            t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-          }
+          var t = localStorage.getItem('theme') || 'dark';
           document.documentElement.setAttribute('data-theme', t);
         } catch (e) {}
       })();
@@ -47,7 +44,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
   </head>
   <body>
     <Header />
-    <main class="wrap">
+    <main>
       <slot />
     </main>
     <Footer />
@@ -65,7 +62,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
           btn.setAttribute('title', label);
         }
 
-        apply(root.getAttribute('data-theme') || 'light');
+        apply(root.getAttribute('data-theme') || 'dark');
 
         btn.addEventListener('click', function () {
           var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';

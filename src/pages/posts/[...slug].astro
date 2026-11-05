@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import Cover from '../../components/Cover.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -26,44 +27,52 @@ const readingTime = (body = '') => Math.max(1, Math.round(body.length / 400));
 ---
 
 <Base title={post.data.title} description={post.data.description}>
-  <article>
-    <header class="post-header">
-      <a class="back-link" href="/">← 返回首页</a>
-      <h1>{post.data.title}</h1>
-      <div class="post-meta">
-        <time datetime={post.data.date.toISOString()}>{fmtDate(post.data.date)}</time>
-        <span class="dot" />
-        <span>{readingTime(post.body)} 分钟</span>
+  <div class="wrap">
+    <article class="post">
+      <header class="post-header">
+        <a class="back-link" href="/articles/">← 全部文章</a>
+        <h1>{post.data.title}</h1>
+        <div class="post-meta">
+          <time datetime={post.data.date.toISOString()}>{fmtDate(post.data.date)}</time>
+          <span class="dot" />
+          <span>{readingTime(post.body)} 分钟</span>
+          {post.data.tags.length > 0 && <span class="dot" />}
+          {post.data.tags.map((tag) => <span>{tag}</span>)}
+        </div>
+      </header>
+
+      <div class="post-hero-cover">
+        <Cover title={post.data.title} index={index < 0 ? 0 : index} />
       </div>
-    </header>
 
-    <div class="prose">
-      <Content />
-    </div>
+      <div class="prose">
+        <Content />
+      </div>
 
-    <footer class="post-footer">
-      {newer ? (
-        <a class="post-nav-link" href={`/posts/${newer.id}/`}>
-          <span>上一篇</span>
-          <strong>{newer.data.title}</strong>
-        </a>
-      ) : (
-        <a class="post-nav-link" href="/">
-          <span>返回</span>
-          <strong>全部文章</strong>
-        </a>
-      )}
-      {older ? (
-        <a class="post-nav-link" href={`/posts/${older.id}/`}>
-          <span>下一篇</span>
-          <strong>{older.data.title}</strong>
-        </a>
-      ) : (
-        <a class="post-nav-link" href="/">
-          <span>返回</span>
-          <strong>全部文章</strong>
-        </a>
-      )}
-    </footer>
-  </article>
+      <footer class="post-footer">
+        {newer ? (
+          <a class="post-nav-link" href={`/posts/${newer.id}/`}>
+            <span>上一篇</span>
+            <strong>{newer.data.title}</strong>
+          </a>
+        ) : (
+          <a class="post-nav-link" href="/articles/">
+            <span>返回</span>
+            <strong>全部文章</strong>
+          </a>
+        )}
+        {older ? (
+          <a class="post-nav-link" href={`/posts/${older.id}/`}>
+            <span>下一篇</span>
+            <strong>{older.data.title}</strong>
+          </a>
+        ) : (
+          <a class="post-nav-link" href="/articles/">
+            <span>返回</span>
+            <strong>全部文章</strong>
+          </a>
+        )}
+      </footer>
+    </article>
+  </div>
 </Base>

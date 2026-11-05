@@ -1,50 +1,113 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import Cover from '../components/Cover.astro';
+import PostCard from '../components/PostCard.astro';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 
-const fmtDate = (d) =>
-  d.toISOString().slice(0, 10).split('-').join('.');
+const featured = posts[0];
+const rest = posts.slice(1, 7);
+const featuredMinutes = Math.max(1, Math.round((featured?.body ?? '').length / 400));
 
-const readingTime = (body = '') => Math.max(1, Math.round(body.length / 400));
+const entries = [
+  { label: '店铺注册', href: '/services/' },
+  { label: '视频认证', href: '/services/' },
+  { label: '二审申诉', href: '/services/' },
+  { label: '独立站建站', href: '/services/' },
+  { label: '合规咨询', href: '/support/' },
+];
 ---
 
 <Base
-  title="致恒的跨境手记 — 跨境电商、独立站与出海服务"
-  description="关于跨境电商、独立站建站与出海服务的一手观察。写得慢，但都是自己踩过的坑。"
+  title="致恒跨境 — 让国货卖全球"
+  description="跨境电商服务与实战笔记。从店铺注册、视频认证到二审申诉，把踩过的坑写成可复用的流程。"
 >
   <section class="hero">
-    <p class="eyebrow">Personal Notes</p>
-    <h1>致恒的跨境手记</h1>
-    <p class="lede">关于跨境电商、独立站建站与出海服务的一手观察。写得慢，但都是自己踩过的坑。</p>
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="hero-eyebrow"><i></i> 跨境电商 · 实战笔记</p>
+          <h1>让国货<br /><em>卖全球</em></h1>
+          <p class="sub">
+            从店铺注册、视频认证到二审申诉，把踩过的坑写成能照着做的流程。
+            写给每一个想把货卖到海外的人。
+          </p>
+          <div class="hero-actions">
+            <a class="btn" href="/articles/">开始阅读</a>
+            <a class="btn btn-ghost" href="/services/">查看服务</a>
+          </div>
+        </div>
+
+        {featured && (
+          <a class="featured" href={`/posts/${featured.id}/`}>
+            <Cover title={featured.data.title} index={1} />
+            <div class="featured-body">
+              <span class="featured-badge">精选</span>
+              <h2>{featured.data.title}</h2>
+              <div class="card-meta">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 7v5l3 2" />
+                </svg>
+                <span>{featuredMinutes} 分钟</span>
+              </div>
+            </div>
+          </a>
+        )}
+      </div>
+    </div>
   </section>
 
-  <div class="list-head">
-    <h2>全部文章</h2>
-    <span class="count">共 {posts.length} 篇</span>
+  <div class="wrap">
+    <div class="quick-links">
+      {entries.map((item, i) => (
+        <a class="quick-card" href={item.href}>
+          <span class="quick-icon">
+            {i === 0 && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l1.5-5h15L21 9" /><path d="M4 9v10h16V9" /><path d="M9 19v-5h6v5" />
+              </svg>
+            )}
+            {i === 1 && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="6" width="14" height="12" rx="2" /><path d="M16 10l6-3v10l-6-3z" />
+              </svg>
+            )}
+            {i === 2 && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" /><path d="M9 12l2 2 4-4" />
+              </svg>
+            )}
+            {i === 3 && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3c2.5 2.5 3.5 5.8 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.8-3.5-9S9.5 5.5 12 3z" />
+              </svg>
+            )}
+            {i === 4 && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /><path d="M9 13h6M9 17h4" />
+              </svg>
+            )}
+          </span>
+          <span>{item.label}</span>
+        </a>
+      ))}
+    </div>
   </div>
 
-  <ul class="post-list">
-    {posts.map((post) => (
-      <li class="post-item">
-        <a href={`/posts/${post.id}/`}>
-          <div class="post-meta">
-            <time datetime={post.data.date.toISOString()}>{fmtDate(post.data.date)}</time>
-            <span class="dot" />
-            <span>{readingTime(post.body)} 分钟</span>
-          </div>
-          <h3>{post.data.title}</h3>
-          <p>{post.data.description}</p>
-          <div class="tags">
-            {post.data.tags.map((tag) => (
-              <span class="tag">#{tag}</span>
-            ))}
-          </div>
-        </a>
-      </li>
-    ))}
-  </ul>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title">最新文章</h2>
+        <a class="more-link" href="/articles/">查看全部 →</a>
+      </div>
+
+      <div class="card-grid">
+        {rest.map((post, i) => <PostCard post={post} index={i + 2} />)}
+      </div>
+    </div>
+  </section>
 </Base>

@@ -24,26 +24,28 @@ const fmtDate = (d) => d.toISOString().slice(0, 10).replace(/-/g, '.');
 ---
 
 <Base title={`#${tag}`} description={`标签 #${tag} 下的全部文章。`}>
-  <section class="hero">
-    <p class="eyebrow">Tag</p>
-    <h1>#{tag}</h1>
-    <p class="lede">共 {posts.length} 篇。</p>
+  <section class="hero" style="padding-bottom:20px">
+    <div class="wrap">
+      <p class="hero-eyebrow"><i></i> 共 {posts.length} 篇</p>
+      <h1 style="font-size:clamp(2rem,4vw,3rem)">#{tag}</h1>
+      <p class="sub">这个标签下的全部文章。</p>
+    </div>
   </section>
 
-  <div class="tag-section">
-    <ul>
+  <div class="wrap">
+    <ul class="row-list">
       {posts.map((post) => (
         <li>
           <a href={`/posts/${post.id}/`}>
             <time datetime={post.data.date.toISOString()}>{fmtDate(post.data.date)}</time>
-            <span>{post.data.title}</span>
+            <span class="row-title">{post.data.title}</span>
           </a>
         </li>
       ))}
     </ul>
-  </div>
 
-  <p style="margin-top:36px">
-    <a class="back-link" href="/tags/">← 全部标签</a>
-  </p>
+    <p style="margin-top:32px">
+      <a class="back-link" href="/tags/">← 全部标签</a>
+    </p>
+  </div>
 </Base>

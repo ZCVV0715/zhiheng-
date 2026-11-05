@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const tags = new Set();
+  for (const post of posts) {
+    for (const tag of post.data.tags) tags.add(tag);
+  }
+  return [...tags].map((tag) => ({
+    params: { tag },
+    props: { tag },
+  }));
+}
+
+const { tag } = Astro.props;
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .filter((post) => post.data.tags.includes(tag))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const fmtDate = (d) => d.toISOString().slice(0, 10).replace(/-/g, '.');
+---
+
+<Base title={`#${tag}`} description={`标签 #${tag} 下的全部文章。`}>
+  <section class="hero">
+    <p class="eyebrow">Tag</p>
+    <h1>#{tag}</h1>
+    <p class="lede">共 {posts.length} 篇。</p>
+  </section>
+
+  <div class="tag-section">
+    <ul>
+      {posts.map((post) => (
+        <li>
+          <a href={`/posts/${post.id}/`}>
+            <time datetime={post.data.date.toISOString()}>{fmtDate(post.data.date)}</time>
+            <span>{post.data.title}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <p style="margin-top:36px">
+    <a class="back-link" href="/tags/">← 全部标签</a>
+  </p>
+</Base>

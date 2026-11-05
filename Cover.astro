@@ -1,0 +1,65 @@
+---
+interface Props {
+  title?: string;
+  index?: number;
+}
+
+const { title = '', index = 0 } = Astro.props;
+const ch = title.trim().charAt(0) || '致';
+const variant = index % 3;
+---
+
+<div class="cover">
+  <svg viewBox="0 0 400 225" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect width="400" height="225" fill="var(--bg-2)" />
+
+    {variant === 0 && (
+      <g fill="none" stroke="var(--accent)" stroke-opacity="0.3" stroke-width="1">
+        <circle cx="308" cy="112" r="34" />
+        <circle cx="308" cy="112" r="64" />
+        <circle cx="308" cy="112" r="94" />
+        <circle cx="308" cy="112" r="124" />
+        <circle cx="308" cy="112" r="154" />
+        <circle cx="308" cy="112" r="4" fill="var(--accent)" stroke="none" />
+        <circle cx="308" cy="112" r="10" fill="var(--accent)" fill-opacity="0.25" stroke="none" />
+      </g>
+    )}
+
+    {variant === 1 && (
+      <g stroke="var(--accent)" stroke-opacity="0.26" stroke-width="1.2">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <line x1={-60 + i * 48} y1="240" x2={40 + i * 48} y2="-15" />
+        ))}
+      </g>
+    )}
+
+    {variant === 2 && (
+      <g>
+        <g fill="var(--accent)" fill-opacity="0.35">
+          {Array.from({ length: 7 }).map((_, r) =>
+            Array.from({ length: 12 }).map((_, c) => (
+              <circle cx={40 + c * 30} cy={30 + r * 30} r="1.6" />
+            ))
+          )}
+        </g>
+        <path
+          d="M-20 210 Q 120 110 260 205 T 430 150"
+          fill="none"
+          stroke="var(--accent)"
+          stroke-opacity="0.35"
+          stroke-width="1.5"
+        />
+      </g>
+    )}
+    <text
+      x="382"
+      y="196"
+      text-anchor="end"
+      font-size="58"
+      font-weight="800"
+      fill="var(--accent)"
+      opacity="0.17"
+      font-family="PingFang SC, Microsoft YaHei, sans-serif"
+    >{ch}</text>
+  </svg>
+</div>

@@ -32,11 +32,17 @@
     ├── content/posts/        # ← 文章都在这里（Markdown）
     ├── layouts/Base.astro    # HTML 骨架、SEO、主题脚本
     ├── components/
-    │   ├── Header.astro
-    │   └── Footer.astro
+    │   ├── Header.astro      # 顶栏：文章/服务/课程/客服
+    │   ├── Footer.astro      # 多栏页脚
+    │   ├── Cover.astro       # 自动生成的封面图（SVG）
+    │   └── PostCard.astro    # 文章卡片
     ├── styles/global.css
     └── pages/
-        ├── index.astro       # 首页
+        ├── index.astro       # 首页（Hero + 宫格入口 + 最新文章）
+        ├── articles/index.astro   # 全部文章
+        ├── services.astro    # 服务（占位）
+        ├── courses.astro     # 课程（占位）
+        ├── support.astro     # 客服（占位）
         ├── about.astro       # 关于
         ├── 404.astro
         ├── rss.xml.js        # /rss.xml
@@ -46,6 +52,16 @@
             ├── index.astro   # 标签总览
             └── [tag].astro   # 单个标签
 ```
+
+页面地图：
+
+| 路径 | 内容 |
+|---|---|
+| `/` | 首页：大字 Hero、精选卡、五宫格入口、最新文章 |
+| `/articles/` | 全部文章 |
+| `/posts/文章文件名/` | 文章详情 |
+| `/services/` `/courses/` `/support/` | 占位页，之后填内容 |
+| `/tags/` | 标签总览 |
 
 ---
 
@@ -165,12 +181,21 @@ git push -u origin main
 
 ```css
 :root {
-  --accent: #b45309;   /* 强调色 */
-  --maxw: 720px;       /* 正文宽度 */
+  --accent: #f0b90b;   /* 强调色（深色主题） */
+  --maxw: 1200px;      /* 外壳宽度 */
+  --reading: 760px;    /* 正文宽度，别超过 800 */
 }
 ```
 
-深色模式在下面 `[data-theme="dark"]` 里，`--accent` 两处都要改。
+浅色主题在下面 `[data-theme="light"]` 里，`--accent` 两处都要改。
+
+### 布局逻辑
+
+默认**深色主题**，右上角可切浅色。
+
+- 导航、页头、宫格入口、卡片区、页脚用 `--maxw`（1200px）
+- 文章正文用 `--reading`（760px）居中
+- 卡片封面由 `Cover.astro` 用 SVG 自动生成，不需要上传图片
 
 ---
 
